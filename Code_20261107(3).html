@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>错题本</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei";}
+        body{background:#f5f7fa;padding:30px;}
+        .wrap{max-width:800px;margin:0 auto;background:#fff;padding:30px;border-radius:12px;}
+        h2{text-align:center;margin-bottom:24px;}
+        .item{padding:16px;border-bottom:1px solid #eee;}
+        .btns{text-align:center;margin-top:30px;gap:12px;display:flex;justify-content:center;}
+        button{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-size:15px;}
+        #clear{background:#f56c6c;color:#fff;}
+        #home{background:#165DFF;color:#fff;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <h2>错题本</h2>
+    <div id="errBox"></div>
+    <div class="btns">
+        <button id="clear">清空全部错题</button>
+        <button id="home">返回首页</button>
+    </div>
+</div>
+<script>
+let errList = JSON.parse(localStorage.getItem("err")) || [];
+if(errList.length===0){
+    document.getElementById("errBox").innerText = "暂无错题，快去刷题吧！";
+}else{
+    let html = "";
+    errList.forEach((q,i)=>{
+        html += `<div class="item">
+            <p>${i+1}. ${q.title}</p>
+            <p>你的答案：${String.fromCharCode(65+q.my)}</p>
+            <p>正确答案：${String.fromCharCode(65+q.answer)}</p>
+            <p>解析：${q.desc}</p>
+        </div>`
+    })
+    document.getElementById("errBox").innerHTML = html;
+}
+document.getElementById("clear").onclick = ()=>{
+    localStorage.removeItem("err");
+    location.reload();
+}
+document.getElementById("home").onclick = ()=>location.href="index.html";
+</script>
+</body>
+</html>

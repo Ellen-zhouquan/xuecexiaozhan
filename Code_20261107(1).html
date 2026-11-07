@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答题页面</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei";}
+        body{background:#f5f7fa;padding:30px;}
+        .wrap{max-width:800px;margin:0 auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 2px 12px #00000010;}
+        .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+        #timer{color:#f56c6c;font-weight:bold;}
+        .q-title{font-size:18px;margin-bottom:20px;line-height:1.6;}
+        .opt{padding:14px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:12px;cursor:pointer;}
+        .opt:hover{border-color:#165DFF;background:#f0f7ff;}
+        .opt.active{background:#165DFF;color:#fff;border-color:#165DFF;}
+        .btns{margin-top:30px;display:flex;gap:16px;justify-content:center;}
+        button{padding:10px 20px;border:none;border-radius:8px;font-size:15px;cursor:pointer;}
+        #prev{background:#eee;color:#333;}
+        #next{background:#165DFF;color:#fff;}
+        #submit{background:#07c160;color:#fff;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="top">
+        <div id="subject"></div>
+        <div>计时：<span id="timer">00:00</span></div>
+    </div>
+    <div id="qBox"></div>
+    <div class="btns">
+        <button id="prev">上一题</button>
+        <button id="next">下一题</button>
+        <button id="submit">提交试卷</button>
+    </div>
+</div>
+<script>
+//题库
+const questionBank = {
+    c: [
+        {title:"C语言程序的入口是？",options:["main()函数","第一行代码","printf函数","自定义函数"],answer:0,desc:"C语言程序从main函数开始执行。"},
+        {title:"C语言中 % 运算符是？",options:["除法","取模（求余）","按位或","逻辑与"],answer:1,desc:"% 是取模运算符，只能对整数操作。"}
+    ],
+    sixiu: [
+        {title:"爱国主义的本质是？",options:["爱祖国大好河山","坚持爱国和爱党、爱社会主义高度统一","热爱传统文化","维护民族团结"],answer:1,desc:"爱国主义本质是爱国、爱党、爱社会主义高度统一。"}
+    ],
+    math: [
+        {title:"函数y=x²的导数是？",options:["x","2x","1","2"],answer:1,desc:"求导公式：(xⁿ)'=nxⁿ⁻¹，n=2时导数为2x。"}
+    ]
+};
+const subName = {c:"C语言题库",sixiu:"思修题库",math:"高等数学题库"};
+//获取科目
+let type = location.search.split("type=")[1];
+let list = questionBank[type];
+document.getElementById("subject").innerText = subName[type];
+
+let idx = 0;
+let userAns = Array(list.length).fill(null);
+let startTime = Date.now();
+let timerDom = document.getElementById("timer");
+let timer = setInterval(()=>{
+    let s = Math.floor((Date.now()-startTime)/1000);
+    let m = String(Math.floor(s/60)).padStart(2,"0");
+    let sec = String(s%60).padStart(2,"0");
+    timerDom.innerText = `${m}:${sec}`;
+},1000);
+
+function render(){
+    let item = list[idx];
+    let html = `<div class="q-title">${idx+1}. ${item.title}</div>`;
+    item.options.forEach((opt,i)=>{
+        html += `<div class="opt ${userAns[idx]===i?'active':''}" onclick="select(${i})">${String.fromCharCode(65+i)}. ${opt}</div>`
+    })
+    document.getElementById("qBox").innerHTML = html;
+}
+window.select = function(i){userAns[idx]=i;render();}
+document.getElementById("prev").onclick = ()=>{if(idx>0){idx--;render();}}
+document.getElementById("next").onclick = ()=>{if(idx<list.length-1){idx++;render();}}
+document.getElementById("submit").onclick = ()=>{
+    clearInterval(timer);
+    let cost = Math.floor((Date.now()-startTime)/1000);
+    let right = 0;
+    let errList = [];
+    list.forEach((q,i)=>{
+        if(userAns[i] === q.answer) right++;
+        else errList.push({...q,my:userAns[i]});
+    })
+    //错题存入localStorage
+    let oldErr = JSON.parse(localStorage.getItem("err")) || [];
+    oldErr.push(...errList);
+    localStorage.setItem("err",JSON.stringify(oldErr));
+    //跳转结果页
+    location.href=`result.html?r=${right}&t=${list.length}&c=${cost}&type=${type}&ans=${JSON.stringify(userAns)}`;
+}
+render();
+</script>
+</body>
+</html>

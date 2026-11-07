@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成绩结果</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei";}
+        body{background:#f5f7fa;padding:30px;}
+        .wrap{max-width:800px;margin:0 auto;background:#fff;padding:30px;border-radius:12px;}
+        .info{text-align:center;margin-bottom:30px;}
+        .item{padding:16px;border-bottom:1px solid #eee;}
+        .wrong{color:#f56c6c;}
+        .right{color:#07c160;}
+        .back{margin-top:30px;text-align:center;}
+        a{padding:10px 20px;background:#165DFF;color:#fff;text-decoration:none;border-radius:8px;display:inline-block;margin:0 8px;}
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="info">
+        <h2>答题完成</h2>
+        <p id="infoText"></p>
+    </div>
+    <div id="detail"></div>
+    <div class="back">
+        <a href="index.html">返回首页</a>
+        <a id="reBtn">重新作答</a>
+    </div>
+</div>
+<script>
+const questionBank = {
+    c: [
+        {title:"C语言程序的入口是？",options:["main()函数","第一行代码","printf函数","自定义函数"],answer:0,desc:"C语言程序从main函数开始执行。"},
+        {title:"C语言中 % 运算符是？",options:["除法","取模（求余）","按位或","逻辑与"],answer:1,desc:"% 是取模运算符，只能对整数操作。"}
+    ],
+    sixiu: [
+        {title:"爱国主义的本质是？",options:["爱祖国大好河山","坚持爱国和爱党、爱社会主义高度统一","热爱传统文化","维护民族团结"],answer:1,desc:"爱国主义本质是爱国、爱党、爱社会主义高度统一。"}
+    ],
+    math: [
+        {title:"函数y=x²的导数是？",options:["x","2x","1","2"],answer:1,desc:"求导公式：(xⁿ)'=nxⁿ⁻¹，n=2时导数为2x。"}
+    ]
+};
+let p = new URLSearchParams(location.search);
+let r = Number(p.get("r"));
+let t = Number(p.get("t"));
+let c = Number(p.get("c"));
+let type = p.get("type");
+let ans = JSON.parse(p.get("ans"));
+let list = questionBank[type];
+document.getElementById("infoText").innerText = `答对${r}题，共${t}题，用时${Math.floor(c/60)}分${c%60}秒`;
+document.getElementById("reBtn").href = `exam.html?type=${type}`;
+let html = "";
+list.forEach((q,i)=>{
+    let my = ans[i];
+    let isRight = my===q.answer;
+    html += `<div class="item">
+        <p>${i+1}. ${q.title}</p>
+        <p class="${isRight?'right':'wrong'}">你的答案：${my===null?"未作答":String.fromCharCode(65+my)}</p>
+        <p>正确答案：${String.fromCharCode(65+q.answer)}</p>
+        <p>解析：${q.desc}</p>
+    </div>`
+})
+document.getElementById("detail").innerHTML = html;
+</script>
+</body>
+</html>

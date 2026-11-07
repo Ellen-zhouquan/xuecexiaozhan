@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学测小站</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Microsoft Yahei",sans-serif;}
+        body{background:#f5f7fa;padding:40px;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{text-align:center;color:#165DFF;margin-bottom:12px;}
+        .tip{text-align:center;color:#666;margin-bottom:40px;}
+        .card-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;}
+        .card{background:#fff;padding:30px;border-radius:12px;box-shadow:0 2px 12px #00000010;text-align:center;cursor:pointer;transition:0.2s;}
+        .card:hover{transform:translateY(-4px);box-shadow:0 4px 16px #00000018;}
+        .card h3{color:#222;margin-bottom:8px;}
+        .card p{color:#777;font-size:14px;}
+        .btn-box{margin-top:40px;text-align:center;}
+        .btn{padding:12px 24px;background:#165DFF;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;text-decoration:none;display:inline-block;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>学测小站</h1>
+        <p class="tip">在线刷题自测平台，巩固课程知识点</p>
+        <div class="card-wrap">
+            <div class="card" onclick="location.href='exam.html?type=c'">
+                <h3>C语言题库</h3>
+                <p>程序基础选择题</p>
+            </div>
+            <div class="card" onclick="location.href='exam.html?type=sixiu'">
+                <h3>思修题库</h3>
+                <p>思政理论选择题</p>
+            </div>
+            <div class="card" onclick="location.href='exam.html?type=math'">
+                <h3>高等数学题库</h3>
+                <p>导数、极限习题</p>
+            </div>
+        </div>
+        <div class="btn-box">
+            <a class="btn" href="error.html">查看错题本</a>
+        </div>
+    </div>
+</body>
+</html>
